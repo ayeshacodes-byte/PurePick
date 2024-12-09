@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
 import ButtonComponent from "../components/ButtonComponent";
 
 const HomeScreen = ({ navigation }) => {
@@ -7,7 +7,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       {/* Logo */}
       <Image
-        source={require("../assets/images/logo.png")}
+        source={require("../assets/images/logo.png")} // Replace with the actual logo path
         style={styles.logo}
       />
 
@@ -21,16 +21,25 @@ const HomeScreen = ({ navigation }) => {
         onPress={() => navigation.navigate("BoycottCheck")}
       />
 
-      {/* Footer Icons */}
+      {/* Footer with Icons */}
       <View style={styles.footer}>
-        <Image
-          source={{ uri: "dummy-path-to-home-icon" }} // Replace with actual path
-          style={styles.icon}
-        />
-        <Image
-          source={{ uri: "dummy-path-to-about-icon" }} // Replace with actual path
-          style={styles.icon}
-        />
+        {/* Home Button */}
+        <TouchableOpacity onPress={() => navigation.navigate("Home")} style={styles.footerButton}>
+          <Image
+            source={require("../assets/images/home.png")} // Replace with actual path
+            style={styles.icon}
+          />
+          <Text style={styles.footerText}>Home</Text>
+        </TouchableOpacity>
+
+        {/* About Us Button */}
+        <TouchableOpacity onPress={() => navigation.navigate("AboutUs")} style={styles.footerButton}>
+          <Image
+            source={require("../assets/images/about.png")} // Replace with actual path
+            style={styles.icon}
+          />
+          <Text style={styles.footerText}>About</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -45,25 +54,28 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 300,
-    height: 300,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "green",
+    height: 150,
     marginBottom: 30,
   },
   footer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     position: "absolute",
-    bottom: 30,
-    width: "50%",
+    bottom: 20,
+    width: "60%",
+  },
+  footerButton: {
+    alignItems: "center",
   },
   icon: {
     width: 30,
     height: 30,
+    marginBottom: 5,
+  },
+  footerText: {
+    fontSize: 12,
+    color: "green",
   },
 });
 
