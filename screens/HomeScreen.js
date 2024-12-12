@@ -7,7 +7,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       {/* Logo */}
       <Image
-        source={require("../assets/images/logo.png")} // Replace with the actual logo path
+        source={require("../assets/images/logo.png")} 
         style={styles.logo}
       />
 
@@ -26,7 +26,7 @@ const HomeScreen = ({ navigation }) => {
         {/* Home Button */}
         <TouchableOpacity onPress={() => navigation.navigate("Home")} style={styles.footerButton}>
           <Image
-            source={require("../assets/images/home.png")} // Replace with actual path
+            source={require("../assets/images/home.png")} 
             style={styles.icon}
           />
           <Text style={styles.footerText}>Home</Text>
@@ -35,7 +35,7 @@ const HomeScreen = ({ navigation }) => {
         {/* About Us Button */}
         <TouchableOpacity onPress={() => navigation.navigate("AboutUs")} style={styles.footerButton}>
           <Image
-            source={require("../assets/images/about.png")} // Replace with actual path
+            source={require("../assets/images/about.png")} 
             style={styles.icon}
           />
           <Text style={styles.footerText}>About</Text>
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "#f1f8f1", // Light background to complement green
   },
   logo: {
     width: 300,
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
-    color: "green",
+    color: "#086308", // Updated color
   },
 });
 

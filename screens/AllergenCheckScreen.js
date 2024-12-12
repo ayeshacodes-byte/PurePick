@@ -1,15 +1,16 @@
 import React from "react";
-import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, Image, TouchableOpacity, ImageBackground } from "react-native";
 
 const AllergenCheckScreen = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-     
-
+    <ImageBackground
+      source={require("../assets/images/ACback.png")} // Add your background image here
+      style={styles.container} // Apply the background image to the container
+    >
       {/* Ingredient Image Placeholder */}
       <View style={styles.imageContainer}>
         <Image
-          source={require("../assets/images/ingredients.png")} // Replace with actual path
+          source={require("../assets/images/ingredients.png")}
           style={styles.image}
         />
       </View>
@@ -29,12 +30,16 @@ const AllergenCheckScreen = ({ navigation }) => {
           <Text style={styles.optionText}>Allergen</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.optionButton}>
+        {/* Boycott Button: Green when AllergenCheckScreen is active */}
+        <TouchableOpacity
+          style={[styles.optionButton, styles.boycottButtonActive]}
+          onPress={() => navigation.navigate("BoycottCheck")}
+        >
           <Image
             source={require("../assets/images/boycott.png")} // Replace with actual path
             style={styles.optionIcon}
           />
-          <Text style={styles.optionText}>Boycott</Text>
+          <Text style={styles.newText}>Boycott</Text>
         </TouchableOpacity>
       </View>
 
@@ -42,7 +47,7 @@ const AllergenCheckScreen = ({ navigation }) => {
       <View style={styles.footer}>
         <TouchableOpacity onPress={() => navigation.navigate("Home")} style={styles.footerButton}>
           <Image
-            source={require("../assets/images/home.png")} // Replace with actual path
+            source={require("../assets/images/bottomhome.png")} // Replace with actual path
             style={styles.footerIcon}
           />
           <Text style={styles.footerText}>Home</Text>
@@ -50,52 +55,35 @@ const AllergenCheckScreen = ({ navigation }) => {
 
         <TouchableOpacity onPress={() => navigation.navigate("AboutUs")} style={styles.footerButton}>
           <Image
-            source={require("../assets/images/about.png")} // Replace with actual path
+            source={require("../assets/images/bottomabout.png")} // Replace with actual path
             style={styles.footerIcon}
           />
           <Text style={styles.footerText}>About</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "green",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-  },
-  backButton: {
-    fontSize: 20,
-    color: "white",
-    marginRight: 10,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "white",
+    resizeMode: "cover", // Ensures the background image covers the entire screen
   },
   imageContainer: {
     alignItems: "center",
     marginVertical: 20,
   },
   image: {
-    width: 250, // Square dimensions
-    height: 250, // Same as width
+    width: 250,
+    height: 250,
     borderWidth: 2,
-    borderColor: "green",
+    borderColor: "#086308", // Green border
     borderRadius: 10,
   },
   uploadButton: {
-    backgroundColor: "green",
-    paddingVertical: 10,
+    backgroundColor: "#086308", // Green background for the button
+    paddingVertical: 12,
     marginHorizontal: 50,
     alignItems: "center",
     borderRadius: 5,
@@ -115,21 +103,30 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white",
     borderWidth: 2,
-    borderColor: "green",
+    borderColor: "#086308", 
     borderRadius: 10,
-    padding: 10,
-    width: 100,
-    height: 100,
+    padding: 15,
+    width: 120,
+    height: 120,
   },
   optionIcon: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
     marginBottom: 5,
   },
   optionText: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "green",
+    color: "#086308", // Green text
+  },
+  newText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#FFFFFF", 
+  },
+  boycottButtonActive: {
+    backgroundColor: "#086308", // Green background for Boycott
+    borderColor: "#086308", // Green border for Boycott
   },
   footer: {
     flexDirection: "row",
@@ -139,7 +136,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
     paddingHorizontal: 30,
-    backgroundColor: "green",
+    backgroundColor: "#086308", // Green background for footer
     paddingVertical: 10,
   },
   footerButton: {
