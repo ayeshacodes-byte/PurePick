@@ -1,3 +1,4 @@
+// src/screens/HomeScreen.js
 import React from "react";
 import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
 import ButtonComponent from "../components/ButtonComponent";
@@ -5,9 +6,14 @@ import ButtonComponent from "../components/ButtonComponent";
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
+      {/* Background Image - health*/}
+      <Image
+        source={require("../assets/images/background_health.png")}
+        style={styles.backgroundImagehealth}
+      />
       {/* Logo */}
       <Image
-        source={require("../assets/images/logo.png")} 
+        source={require("../assets/images/logo.png")}
         style={styles.logo}
       />
 
@@ -15,32 +21,43 @@ const HomeScreen = ({ navigation }) => {
       <ButtonComponent
         title="Allergen Check"
         onPress={() => navigation.navigate("AllergenCheck")}
+        style={styles.button}
       />
       <ButtonComponent
         title="Boycott Check"
         onPress={() => navigation.navigate("BoycottCheck")}
+        style={styles.button}
       />
 
-      {/* Footer with Icons */}
+      {/* Footer Section */}
       <View style={styles.footer}>
-        {/* Home Button */}
-        <TouchableOpacity onPress={() => navigation.navigate("Home")} style={styles.footerButton}>
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={() => navigation.navigate("Home")}
+        >
           <Image
-            source={require("../assets/images/home.png")} 
+            source={require("../assets/images/home_icon.png")}
             style={styles.icon}
           />
-          <Text style={styles.footerText}>Home</Text>
+          <Text style={styles.iconText}>Home</Text>
         </TouchableOpacity>
-
-        {/* About Us Button */}
-        <TouchableOpacity onPress={() => navigation.navigate("AboutUs")} style={styles.footerButton}>
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={() => navigation.navigate("About")}
+        >
           <Image
-            source={require("../assets/images/about.png")} 
+            source={require("../assets/images/about_icon.png")}
             style={styles.icon}
           />
-          <Text style={styles.footerText}>About</Text>
+          <Text style={styles.iconText}>About</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Background Image - boycott */}
+      <Image
+        source={require("../assets/images/background_boycott.png")}
+        style={styles.backgroundImageboycott}
+      />
     </View>
   );
 };
@@ -50,32 +67,68 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f1f8f1", // Light background to complement green
+    backgroundColor: "transparent",
   },
   logo: {
     width: 300,
-    height: 150,
+    height: 300,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "green",
     marginBottom: 30,
+    backgroundColor: "transparent", // Ensuring the background image shows through
+  },
+  backgroundImagehealth: {
+    position: "absolute",
+    bottom: 300,
+    width: 650,
+    height: 650,
+    opacity: 0.15,
+    zIndex: 1,
+  },
+  backgroundImageboycott: {
+    position: "absolute",
+    top: 500,
+    left: 0.1,
+    width: 650,
+    height: 650,
+    opacity: 0.7,
+    zIndex: -1,
+    transform: [{ rotate: "-25deg" }, { scale: 1 }],
+  },
+  logo: {
+    width: 400,
+    height: 400,
+    zIndex: 1,
   },
   footer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
     position: "absolute",
-    bottom: 20,
-    width: "60%",
-  },
-  footerButton: {
-    alignItems: "center",
+    bottom: 30,
+    width: "80%", // Adjust the width to your preference
+    paddingHorizontal: 10,
+    zIndex: 1,
   },
   icon: {
     width: 30,
     height: 30,
-    marginBottom: 5,
+    marginBottom: 10,
   },
-  footerText: {
-    fontSize: 12,
-    color: "#086308", // Updated color
+  iconContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  iconText: {
+    color: "#0d640d",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  button: {
+    zIndex: 1,
   },
 });
 

@@ -1,3 +1,4 @@
+// src/components/ButtonComponent.js
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
@@ -10,16 +11,25 @@ const ButtonComponent = ({ title, onPress }) => (
 const styles = StyleSheet.create({
   button: {
     padding: 15,
-    backgroundColor: "#008000",
-    borderRadius: 10,
+    backgroundColor: "white",
+    borderColor: "#008000",
+    borderWidth: 4,
+    borderRadius: 20,
     marginBottom: 15,
     alignItems: "center",
-    width: 200, // Adjust button width
+    width: 200,
+    // Shadow for iOS
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    // Elevation for Android
+    elevation: 5,
   },
   buttonText: {
-    color: "white",
+    color: "#0d640d",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 20,
     textAlign: "center",
   },
 });

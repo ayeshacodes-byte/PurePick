@@ -1,20 +1,35 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import Header from "../components/Header";
 
 const AboutUsScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       {/* Header */}
-      
+      <Header navigation={navigation} title="About Us" />
+
+      {/* Space below Header */}
+      <View style={styles.headerSpacer} />
+
       {/* Content Cards */}
       <ScrollView contentContainerStyle={styles.contentContainer}>
         {/* Our Mission */}
         <TouchableOpacity
           style={styles.card}
-          onPress={() => navigation.navigate("OurMission")}
+          onPress={() => navigation.navigate("Mission")}
         >
           <View style={styles.imageContainer}>
-            <Image source={require("../assets/images/mission.png")} style={styles.cardImage} />
+            <Image
+              source={require("../assets/images/mission.png")}
+              style={styles.cardImage}
+            />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.cardText}>Our Mission</Text>
@@ -24,10 +39,13 @@ const AboutUsScreen = ({ navigation }) => {
         {/* What We Offer */}
         <TouchableOpacity
           style={styles.card}
-          onPress={() => navigation.navigate("WhatWeOffer")}
+          onPress={() => navigation.navigate("Offer")}
         >
           <View style={styles.imageContainer}>
-            <Image source={require("../assets/images/offer.png")} style={styles.cardImage} />
+            <Image
+              source={require("../assets/images/offer.png")}
+              style={styles.cardImage}
+            />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.cardText}>What We Offer</Text>
@@ -40,7 +58,10 @@ const AboutUsScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("WhyPurePick")}
         >
           <View style={styles.imageContainer}>
-            <Image source={require("../assets/images/why.png")} style={styles.cardImage} />
+            <Image
+              source={require("../assets/images/why.png")}
+              style={styles.cardImage}
+            />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.cardText}>Why PurePick</Text>
@@ -56,7 +77,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F5F5F5",
   },
-
+  headerSpacer: {
+    height: 120, // Adjust as needed to match spacing in BoycottCheckScreen
+  },
   contentContainer: {
     alignItems: "center",
     padding: 20,
@@ -65,19 +88,18 @@ const styles = StyleSheet.create({
     width: "90%",
     borderWidth: 2,
     borderColor: "#086308", // Updated green color
-    borderRadius: 10,
-    marginBottom: 20,
+    borderRadius: 20,
+    marginBottom: 15,
     overflow: "hidden",
     backgroundColor: "white",
   },
   imageContainer: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
   },
   cardImage: {
-    width: 120,
-    height: 120,
+    width: 160,
+    height: 160,
     resizeMode: "contain",
   },
   textContainer: {

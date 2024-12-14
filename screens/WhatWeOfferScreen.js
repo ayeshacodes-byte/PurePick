@@ -1,49 +1,67 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import Header from "../components/Header";
 
 const WhatWeOfferScreen = ({ navigation }) => {
   return (
     <LinearGradient
-      colors={["#ffffff", "#d4edda", "#086308"]} // Updated gradient to use green shades
+      colors={["#ffffff", "#e8ffe8", "#ccffcc"]}
       style={styles.gradient}
     >
+      {/* Header */}
+      <Header navigation={navigation} title="What We Offer" />
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>What We Offer</Text>
-
         {/* Card 1: Allergen Check */}
         <View style={styles.card}>
           <Image
-            source={require("../assets/images/allergen.png")} 
+            source={require("../assets/images/health_icon.png")}
             style={styles.icon}
           />
           <Text style={styles.cardTitle}>Allergen Detection</Text>
           <Text style={styles.cardDescription}>
-            PurePick uses smart AI to quickly scan and analyze product ingredients. It helps you spot harmful allergens or substances that could affect your health, whether you have food allergies, skin sensitivities, or other restrictions. This way, you can choose safely and confidently.
+            PurePick uses smart AI to quickly scan and analyze product
+            ingredients. It helps you spot harmful allergens or substances that
+            could affect your health, whether you have food allergies, skin
+            sensitivities, or other restrictions. This way, you can choose
+            safely and confidently.
           </Text>
         </View>
 
         {/* Card 2: Ethical Boycott */}
         <View style={styles.card}>
           <Image
-            source={require("../assets/images/boycott.png")} 
+            source={require("../assets/images/boycott_icon.png")}
             style={styles.icon}
           />
           <Text style={styles.cardTitle}>Ethical Choice Selection</Text>
           <Text style={styles.cardDescription}>
-            PurePick helps you stay aware of products from companies involved in unethical practices. It alerts you when a product is linked to a boycott, so you can make responsible choices that match your values and avoid supporting harmful businesses.
+            PurePick helps you stay aware of products from companies involved in
+            unethical practices. It alerts you when a product is linked to a
+            boycott, so you can make responsible choices that match your values
+            and avoid supporting harmful businesses.
           </Text>
         </View>
 
         {/* Card 3: Real-Time Analysis */}
         <View style={styles.card}>
           <Image
-            source={require("../assets/images/analysis.png")} 
+            source={require("../assets/images/analysis.png")}
             style={styles.icon}
           />
           <Text style={styles.cardTitle}>Real-Time Analysis</Text>
           <Text style={styles.cardDescription}>
-            With PurePick, you can easily scan product ingredients and barcodes using your phone’s camera. The app instantly gives you important details about allergens, harmful ingredients, and ethical concerns, helping you make better choices for your health and values.
+            With PurePick, you can easily scan product ingredients and barcodes
+            using your phone’s camera. The app instantly gives you important
+            details about allergens, harmful ingredients, and ethical concerns,
+            helping you make better choices for your health and values.
           </Text>
         </View>
 
@@ -53,7 +71,7 @@ const WhatWeOfferScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("Home")}
         >
           <Image
-            source={require("../assets/images/bottomhome.png")} 
+            source={require("../assets/images/home_icon_white.png")} // Replace with a suitable home icon path
             style={styles.homeIcon}
           />
           <Text style={styles.homeText}>Home</Text>
@@ -70,13 +88,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     alignItems: "center",
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#086308", // Updated to match the theme color
-    marginBottom: 20,
-    textAlign: "center",
+    paddingTop: 140, // Add paddingTop to create space below the header
+    paddingBottom: 100, // Ensure space at the bottom for the Home button
   },
   card: {
     width: "90%",
@@ -99,7 +112,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#086308", // Updated to match the theme color
+    color: "#008000",
     marginBottom: 10,
     textAlign: "center",
   },
@@ -107,22 +120,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#555",
     lineHeight: 22,
-    textAlign: "center",
+    textAlign: "justify",
   },
   homeButton: {
     flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#086308", // Updated to match the theme color
     padding: 10,
-    borderRadius: 25,
-    marginTop: 20,
-    width: 150,
+    backgroundColor: "#086308",
+    borderColor: "white",
+    borderWidth: 4,
+    borderRadius: 20,
+    marginTop: 30,
+    alignItems: "center",
     justifyContent: "center",
+    width: 300,
+    height: 60,
+    // Shadow for iOS
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    // Elevation for Android
     elevation: 5,
+    zIndex: 1,
   },
   homeIcon: {
     width: 24,
@@ -131,10 +150,10 @@ const styles = StyleSheet.create({
   },
   homeText: {
     color: "white",
-    fontSize: 18,
     fontWeight: "bold",
+    fontSize: 20,
+    textAlign: "center",
   },
 });
 
 export default WhatWeOfferScreen;
-

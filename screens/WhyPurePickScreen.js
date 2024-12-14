@@ -1,24 +1,24 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import Header from "../components/Header";
 
 const WhyPurePickScreen = ({ navigation }) => {
   return (
     <LinearGradient
-      colors={["#ffffff", "#d4edda", "#086308"]} // Updated gradient to use green shades
+      colors={["#ffffff", "#d4edda", "#c3e6cb"]}
       style={styles.gradient}
     >
+      {/* Header */}
+      <Header navigation={navigation} title="Why PurePick" />
       <View style={styles.container}>
-        {/* Title Section */}
-        <Text style={styles.title}>Why PurePick?</Text>
-
         {/* Benefits Section */}
         <View style={styles.benefitsContainer}>
           <View style={styles.row}>
             {/* Benefit 1 */}
             <View style={styles.benefitBox}>
               <Image
-                source={require("../assets/images/health.png")}
+                source={require("../assets/images/health-hazard.png")}
                 style={styles.icon}
               />
               <Text style={styles.benefitTitle}>Health First</Text>
@@ -30,7 +30,7 @@ const WhyPurePickScreen = ({ navigation }) => {
             {/* Benefit 2 */}
             <View style={styles.benefitBox}>
               <Image
-                source={require("../assets/images/ethics.png")}
+                source={require("../assets/images/background-boycott.png")}
                 style={styles.icon}
               />
               <Text style={styles.benefitTitle}>Ethical Choices</Text>
@@ -65,7 +65,7 @@ const WhyPurePickScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("Home")}
         >
           <Image
-            source={require("../assets/images/bottomhome.png")}
+            source={require("../assets/images/home_icon_white.png")}
             style={styles.homeIcon}
           />
           <Text style={styles.homeText}>Home</Text>
@@ -78,26 +78,17 @@ const WhyPurePickScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   gradient: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   container: {
-    width: "90%",
     alignItems: "center",
-    justifyContent: "space-between",
-    flex: 1,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#086308", // Updated to match the theme color
-    textAlign: "center",
-    marginBottom: 10,
+    justifyContent: "flex-start", // Changed from space-between to flex-start
+    flexGrow: 1, // Ensures the container stretches to take available space but doesn't force extra space
+    padding: 20,
+    paddingTop: 170,
   },
   benefitsContainer: {
     width: "100%",
-    flex: 1,
-    justifyContent: "center",
+    marginBottom: 90, // Added some space at the bottom to separate the benefits from the call-to-action text
   },
   row: {
     flexDirection: "row",
@@ -117,14 +108,14 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   icon: {
-    width: 50,
-    height: 50,
+    width: 65,
+    height: 65,
     marginBottom: 8,
   },
   benefitTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#086308", // Updated to match the theme color
+    color: "#008000",
     textAlign: "center",
     marginBottom: 4,
   },
@@ -135,35 +126,44 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   callToAction: {
-    fontSize: 14,
+    fontSize: 15,
+    fontWeight: "bold",
     textAlign: "center",
-    color: "#333",
+    color: "#008000",
     marginVertical: 10,
     lineHeight: 20,
   },
   homeButton: {
     flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#086308", // Updated to match the theme color
     padding: 10,
-    borderRadius: 25,
-    width: 140,
+    backgroundColor: "#086308",
+    borderColor: "white",
+    borderWidth: 4,
+    borderRadius: 20,
+    marginTop: 20,
+    alignItems: "center",
     justifyContent: "center",
+    width: 300,
+    height: 60,
+    // Shadow for iOS
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    // Elevation for Android
     elevation: 5,
+    zIndex: 1,
   },
   homeIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 8,
+    width: 24,
+    height: 24,
+    marginRight: 10,
   },
   homeText: {
     color: "white",
-    fontSize: 16,
     fontWeight: "bold",
+    fontSize: 20,
+    textAlign: "center",
   },
 });
 

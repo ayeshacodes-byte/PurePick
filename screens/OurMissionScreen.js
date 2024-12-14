@@ -1,24 +1,34 @@
-import React from "react"; 
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Image } from "react-native";
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import Header from "../components/Header";
 import { LinearGradient } from "expo-linear-gradient";
 
 const OurMissionScreen = ({ navigation }) => {
   return (
-    <ImageBackground
-      source={require("../assets/images/background.png")} 
-      style={styles.background}
+    <LinearGradient
+      colors={["#ffffff", "#e8ffe8", "#ccffcc"]}
+      style={styles.gradient}
     >
-      <LinearGradient
-        colors={["rgba(8, 99, 8, 0.9)", "rgba(255, 255, 255, 0.9)"]} // Adjusted for #086308
-        style={styles.gradient}
-      >
+      <View style={styles.screenContainer}>
+        {/* Header */}
+        <Header navigation={navigation} title="Our Mission" />
         <View style={styles.container}>
           <Text style={styles.title}>Mission Of PurePick</Text>
           <Text style={styles.description}>
-            "At PurePick, our mission is to empower consumers with the knowledge they need to make safe, ethical, and
-            informed choices. Through cutting-edge AI and machine learning technology, we provide real-time product
-            analysis by scanning ingredients and identifying harmful allergens and unethical practices. We are committed
-            to promoting healthier, more responsible purchasing decisions for a better and more sustainable world."
+            "At PurePick, our mission is to empower consumers with the knowledge
+            they need to make safe, ethical, and informed choices. Through
+            cutting-edge AI and machine learning technology, we provide
+            real-time product analysis by scanning ingredients and identifying
+            harmful allergens and unethical practices. We are committed to
+            promoting healthier, more responsible purchasing decisions for a
+            better and more sustainable world."
           </Text>
         </View>
 
@@ -28,32 +38,30 @@ const OurMissionScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("Home")}
         >
           <Image
-            source={require("../assets/images/bottomhome.png")} // Replace with a suitable home icon path
+            source={require("../assets/images/home_icon_white.png")} // Replace with a suitable home icon path
             style={styles.homeIcon}
           />
           <Text style={styles.homeText}>Home</Text>
         </TouchableOpacity>
-      </LinearGradient>
-    </ImageBackground>
+      </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    resizeMode: "cover",
-  },
   gradient: {
     flex: 1,
-    justifyContent: "space-between",
+  },
+  screenContainer: {
+    flex: 1, // Make sure the outer container takes the full screen
     alignItems: "center",
-    paddingVertical: 20,
   },
   container: {
     margin: 20,
+    marginTop: 180,
     padding: 20,
     borderRadius: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.85)",
+    backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -63,7 +71,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#086308", // Updated green color
+    color: "green",
     marginBottom: 20,
     textAlign: "center",
   },
@@ -71,9 +79,29 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#333",
     lineHeight: 26,
-    textAlign: "center",
+    textAlign: "justify",
   },
- 
+  homeButton: {
+    flexDirection: "row",
+    padding: 10,
+    backgroundColor: "#086308",
+    borderColor: "white",
+    borderWidth: 4,
+    borderRadius: 20,
+    marginTop: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    width: 300,
+    height: 60,
+    // Shadow for iOS
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    // Elevation for Android
+    elevation: 5,
+    zIndex: 1,
+  },
   homeIcon: {
     width: 24,
     height: 24,
@@ -81,22 +109,9 @@ const styles = StyleSheet.create({
   },
   homeText: {
     color: "white",
-    fontSize: 18,
     fontWeight: "bold",
-  },
-  homeButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#086308", // Updated green color
-    padding: 10,
-    borderRadius: 25,
-    width: 150,
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
+    fontSize: 20,
+    textAlign: "center",
   },
 });
 
