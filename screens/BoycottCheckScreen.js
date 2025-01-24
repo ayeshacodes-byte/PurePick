@@ -49,8 +49,8 @@ const BoycottCheckScreen = ({ navigation }) => {
     setLoading(true);
 
     try {
-      // Fetch extracted data from the new API using Axios
-      const options = {
+      // Fetch extracted data from the external API using Axios
+      const externalApiOptions = {
         method: "GET",
         url: `https://product-lookup-by-upc-or-ean.p.rapidapi.com/code/${data}`,
         headers: {
@@ -60,15 +60,67 @@ const BoycottCheckScreen = ({ navigation }) => {
         },
       };
 
-      const response = await axios.request(options);
+      console.log("Making request to external API...");
+      const externalApiResponse = await axios.request(externalApiOptions);
+      console.log("External API response:", externalApiResponse.data);
 
-      if (!response.data || Object.keys(response.data).length === 0) {
+      if (
+        !externalApiResponse.data ||
+        Object.keys(externalApiResponse.data).length === 0
+      ) {
+        console.warn("No data received from external API.");
         navigation.navigate("NoInfo");
+        return;
+      }
+
+      // Set extracted data for UI display
+      setExtractedData(externalApiResponse.data);
+
+      // Extract brand name or relevant identifier from the response
+      const brandName = externalApiResponse.data.product?.brand || "Unknown";
+      console.log("Extracted brand name:", brandName);
+
+      // Fetch boycott status from the backend
+      console.log("Sending request to backend for boycott status...");
+      const backendApiResponse = await axios.post(
+        "http://192.168.1.5:8000/purepick/check_boycott/",
+        { brand: brandName },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      console.log("Backend API response:", backendApiResponse.data);
+
+      const { status, message, country_of_manufacture } =
+        backendApiResponse.data;
+
+      if (status === "boycotted") {
+        console.log("Product is boycotted.");
+        navigation.navigate("BoycottProduct", {
+          brand: brandName,
+          reason: message,
+          countryOfManufacture: country_of_manufacture,
+        });
+      } else if (status === "not_boycotted") {
+        console.log("Product is safe.");
+        navigation.navigate("SafeProduct", { brand: brandName, message });
       } else {
-        setExtractedData(response.data);
+        console.warn("Unexpected status:", status);
+        navigation.navigate("NoInfo");
       }
     } catch (error) {
-      console.error("Error fetching barcode data:", error);
+      console.error("Error occurred during barcode scan:", error);
+
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        console.error("Backend responded with error:", error.response.data);
+        console.error("Status code:", error.response.status);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("No response received from the backend:", error.request);
+      } else {
+        // Something else happened while setting up the request
+        console.error("Error during setup of the request:", error.message);
+      }
+
       navigation.navigate("NoInfo");
     } finally {
       setLoading(false);
