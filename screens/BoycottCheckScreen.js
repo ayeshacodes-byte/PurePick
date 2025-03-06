@@ -47,12 +47,15 @@ const BoycottCheckScreen = ({ navigation }) => {
     setScanned(true);
     setBarcodeData(data);
     setLoading(true);
+    console.log("Barcode scanned:", data); // Debugging barcode data
 
     try {
-      // Fetch extracted data from the external API using Axios
+      console.log("Making request to external API with barcode:", data);
+
       const externalApiOptions = {
         method: "GET",
         url: `https://product-lookup-by-upc-or-ean.p.rapidapi.com/code/${data}`,
+
         headers: {
           "x-rapidapi-key":
             "f887c2d552msh6f354d4fb3c716ep1b5ddbjsnb9c6e58713ea",
@@ -60,34 +63,33 @@ const BoycottCheckScreen = ({ navigation }) => {
         },
       };
 
-      console.log("Making request to external API...");
       const externalApiResponse = await axios.request(externalApiOptions);
-      console.log("External API response:", externalApiResponse.data);
+      console.log("External API response:", externalApiResponse.data); // Debugging response
 
       if (
         !externalApiResponse.data ||
-        Object.keys(externalApiResponse.data).length === 0
+        !externalApiResponse.data.product ||
+        Object.keys(externalApiResponse.data.product).length === 0
       ) {
-        console.warn("No data received from external API.");
-        navigation.navigate("NoInfo");
+        console.warn("No product data found in the external API response.");
+        navigation.navigate("NoInfo", {
+          message:
+            "No information found for the scanned product. Please try another item.",
+        });
         return;
       }
 
-      // Set extracted data for UI display
-      setExtractedData(externalApiResponse.data);
-
-      // Extract brand name or relevant identifier from the response
       const brandName = externalApiResponse.data.product?.brand || "Unknown";
       console.log("Extracted brand name:", brandName);
 
-      // Fetch boycott status from the backend
-      console.log("Sending request to backend for boycott status...");
+      console.log("Sending request to backend with brand:", brandName);
       const backendApiResponse = await axios.post(
-        "http://192.168.1.5:8000/purepick/check_boycott/",
+        "http://192.168.18.223:8000/purepick/check_boycott/",
         { brand: brandName },
         { headers: { "Content-Type": "application/json" } }
       );
-      console.log("Backend API response:", backendApiResponse.data);
+
+      console.log("Backend API response:", backendApiResponse.data); // Debugging backend response
 
       const { status, message, country_of_manufacture } =
         backendApiResponse.data;
@@ -107,113 +109,100 @@ const BoycottCheckScreen = ({ navigation }) => {
         navigation.navigate("NoInfo");
       }
     } catch (error) {
-      console.error("Error occurred during barcode scan:", error);
+      console.log("Error occurred during barcode scan:", error);
 
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        console.error("Backend responded with error:", error.response.data);
-        console.error("Status code:", error.response.status);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error("No response received from the backend:", error.request);
-      } else {
-        // Something else happened while setting up the request
-        console.error("Error during setup of the request:", error.message);
+      let userFriendlyMessage =
+        "An unexpected error occurred. Please try again later.";
+        if (error.response) {
+          console.log("Backend error response:", error.response.data);
+          console.log("Status code:", error.response.status);
+  
+          if (error.response.status === 404) {
+            userFriendlyMessage =
+              "No information found for the scanned product. Please try another item.";
+          } else if (error.response.status === 409) {
+            userFriendlyMessage =
+              "There was a conflict with the request. Please try again.";
+          }
+        } else if (error.request) {
+          console.log("No response received from backend:", error.request);
+          userFriendlyMessage =
+            "Could not connect to the server. Check your internet connection.";
+        } else {
+          console.log("Request setup error:", error.message);
+        }
+  
+        navigation.navigate("NoInfo", { message: userFriendlyMessage });
+      } finally {
+        setLoading(false);
       }
-
-      navigation.navigate("NoInfo");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <ScrollView contentContainerStyle={styles.scrollContent}>
-      <View style={styles.container}>
-        {/* Background Image - boycott */}
-        <Image
-          source={require("../assets/images/background-boycott.png")}
-          style={styles.backgroundImageboycott}
-        />
-
-        {/* Header Section */}
-        <Header navigation={navigation} title="Boycott Check Screen" />
-
-        {/* Camera View for Barcode Scanning */}
-        <View style={styles.barcodeContainer}>
-          <CameraView
-            style={styles.camera}
-            facing={facing}
-            onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+    };
+  
+    return (
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.container}>
+          <Image
+            source={require("../assets/images/background-boycott.png")}
+            style={styles.backgroundImageboycott}
           />
-        </View>
-
-        {/* Loading Indicator */}
-        {loading && <ActivityIndicator size="large" color="#0000ff" />}
-
-        {/* Display Extracted Data */}
-        {extractedData && (
-          <View style={styles.productInfo}>
-            <Text style={styles.title}>Extracted Data:</Text>
-            <Text>{JSON.stringify(extractedData, null, 2)}</Text>
+  
+          <Header navigation={navigation} title="Boycott Check Screen" />
+  
+          <View style={styles.barcodeContainer}>
+            <CameraView
+              style={styles.camera}
+              facing={facing}
+              onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+            />
           </View>
-        )}
-
-        {/* Navigation Buttons */}
-        <TouchableOpacity onPress={() => navigation.navigate("SafeProduct")}>
-          <Text>Safe Product</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate("BoycottProduct")}>
-          <Text>Boycott Product</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate("NoInfo")}>
-          <Text>No Information About Product</Text>
-        </TouchableOpacity>
-
-        {/* Button to Rescan */}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            setScanned(false);
-            setExtractedData(null);
-          }}
-        >
-          <Text style={styles.buttonText}>
-            {scanned ? "Scan Again" : "Scan Barcode"}
-          </Text>
-        </TouchableOpacity>
-
-        {/* Square Containers */}
-        <View style={styles.squareContainers}>
-          {/* Left Square Container */}
+  
+          {loading && <ActivityIndicator size="large" color="#0000ff" />}
+  
+          {extractedData && (
+            <View style={styles.productInfo}>
+              <Text style={styles.title}>Extracted Data:</Text>
+              <Text>{JSON.stringify(extractedData, null, 2)}</Text>
+            </View>
+          )}
+  
           <TouchableOpacity
-            style={[styles.squareContainer, styles.leftContainer]}
-            onPress={() => navigation.navigate("AllergenCheck")}
+            style={styles.button}
+            onPress={() => {
+              console.log("Resetting scan state...");
+              setScanned(false);
+              setExtractedData(null);
+            }}
           >
-            <Image
-              source={require("../assets/images/health_icon.png")}
-              style={styles.optionIcon}
-            />
-            <Text style={styles.leftText}>Allergen</Text>
+            <Text style={styles.buttonText}>
+              {scanned ? "Scan Again" : "Scan Barcode"}
+            </Text>
           </TouchableOpacity>
-
-          {/* Right Square Container */}
-          <TouchableOpacity
-            style={[styles.squareContainer, styles.rightContainer]}
-            onPress={() => navigation.navigate("BoycottCheck")}
-          >
-            <Image
-              source={require("../assets/images/boycott_icon.png")}
-              style={styles.optionIcon}
-            />
-            <Text style={styles.rightText}>Boycott</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Footer Section */}
-        <View style={styles.footer}>
+  
+          <View style={styles.squareContainers}>
+            <TouchableOpacity
+              style={[styles.squareContainer, styles.leftContainer]}
+              onPress={() => navigation.navigate("AllergenCheck")}
+            >
+              <Image
+                source={require("../assets/images/health_icon.png")}
+                style={styles.optionIcon}
+              />
+              <Text style={styles.leftText}>Allergen</Text>
+            </TouchableOpacity>
+  
+            <TouchableOpacity
+              style={[styles.squareContainer, styles.rightContainer]}
+              onPress={() => navigation.navigate("BoycottCheck")}
+            >
+              <Image
+                source={require("../assets/images/boycott_icon.png")}
+                style={styles.optionIcon}
+              />
+              <Text style={styles.rightText}>Boycott</Text>
+            </TouchableOpacity>
+          </View>
+  
+          <View style={styles.footer}>
           <TouchableOpacity
             style={styles.iconContainer}
             onPress={() => navigation.navigate("Home")}
@@ -291,7 +280,7 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderRadius: 20,
     marginBottom: 50,
-    marginTop: 20,
+    marginTop: 40,
     alignItems: "center",
     width: 300,
     height: 60,
