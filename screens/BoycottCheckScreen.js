@@ -55,7 +55,6 @@ const BoycottCheckScreen = ({ navigation }) => {
       const externalApiOptions = {
         method: "GET",
         url: `https://product-lookup-by-upc-or-ean.p.rapidapi.com/code/${data}`,
-
         headers: {
           "x-rapidapi-key":
             "f887c2d552msh6f354d4fb3c716ep1b5ddbjsnb9c6e58713ea",
@@ -100,6 +99,7 @@ const BoycottCheckScreen = ({ navigation }) => {
           brand: brandName,
           reason: message,
           countryOfManufacture: country_of_manufacture,
+          category: externalApiResponse.data.product?.category || "Unknown",
         });
       } else if (status === "not_boycotted") {
         console.log("Product is safe.");
@@ -113,96 +113,97 @@ const BoycottCheckScreen = ({ navigation }) => {
 
       let userFriendlyMessage =
         "An unexpected error occurred. Please try again later.";
-        if (error.response) {
-          console.log("Backend error response:", error.response.data);
-          console.log("Status code:", error.response.status);
-  
-          if (error.response.status === 404) {
-            userFriendlyMessage =
-              "No information found for the scanned product. Please try another item.";
-          } else if (error.response.status === 409) {
-            userFriendlyMessage =
-              "There was a conflict with the request. Please try again.";
-          }
-        } else if (error.request) {
-          console.log("No response received from backend:", error.request);
+
+      if (error.response) {
+        console.log("Backend error response:", error.response.data);
+        console.log("Status code:", error.response.status);
+
+        if (error.response.status === 404) {
           userFriendlyMessage =
-            "Could not connect to the server. Check your internet connection.";
-        } else {
-          console.log("Request setup error:", error.message);
+            "No information found for the scanned product. Please try another item.";
+        } else if (error.response.status === 409) {
+          userFriendlyMessage =
+            "There was a conflict with the request. Please try again.";
         }
-  
-        navigation.navigate("NoInfo", { message: userFriendlyMessage });
-      } finally {
-        setLoading(false);
+      } else if (error.request) {
+        console.log("No response received from backend:", error.request);
+        userFriendlyMessage =
+          "Could not connect to the server. Check your internet connection.";
+      } else {
+        console.log("Request setup error:", error.message);
       }
-    };
-  
-    return (
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.container}>
-          <Image
-            source={require("../assets/images/background-boycott.png")}
-            style={styles.backgroundImageboycott}
+
+      navigation.navigate("NoInfo", { message: userFriendlyMessage });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <ScrollView contentContainerStyle={styles.scrollContent}>
+      <View style={styles.container}>
+        <Image
+          source={require("../assets/images/background-boycott.png")}
+          style={styles.backgroundImageboycott}
+        />
+
+        <Header navigation={navigation} title="Boycott Check Screen" />
+
+        <View style={styles.barcodeContainer}>
+          <CameraView
+            style={styles.camera}
+            facing={facing}
+            onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
           />
-  
-          <Header navigation={navigation} title="Boycott Check Screen" />
-  
-          <View style={styles.barcodeContainer}>
-            <CameraView
-              style={styles.camera}
-              facing={facing}
-              onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-            />
+        </View>
+
+        {loading && <ActivityIndicator size="large" color="#0000ff" />}
+
+        {extractedData && (
+          <View style={styles.productInfo}>
+            <Text style={styles.title}>Extracted Data:</Text>
+            <Text>{JSON.stringify(extractedData, null, 2)}</Text>
           </View>
-  
-          {loading && <ActivityIndicator size="large" color="#0000ff" />}
-  
-          {extractedData && (
-            <View style={styles.productInfo}>
-              <Text style={styles.title}>Extracted Data:</Text>
-              <Text>{JSON.stringify(extractedData, null, 2)}</Text>
-            </View>
-          )}
-  
+        )}
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            console.log("Resetting scan state...");
+            setScanned(false);
+            setExtractedData(null);
+          }}
+        >
+          <Text style={styles.buttonText}>
+            {scanned ? "Scan Again" : "Scan Barcode"}
+          </Text>
+        </TouchableOpacity>
+
+        <View style={styles.squareContainers}>
           <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              console.log("Resetting scan state...");
-              setScanned(false);
-              setExtractedData(null);
-            }}
+            style={[styles.squareContainer, styles.leftContainer]}
+            onPress={() => navigation.navigate("AllergenCheck")}
           >
-            <Text style={styles.buttonText}>
-              {scanned ? "Scan Again" : "Scan Barcode"}
-            </Text>
+            <Image
+              source={require("../assets/images/health_icon.png")}
+              style={styles.optionIcon}
+            />
+            <Text style={styles.leftText}>Allergen</Text>
           </TouchableOpacity>
-  
-          <View style={styles.squareContainers}>
-            <TouchableOpacity
-              style={[styles.squareContainer, styles.leftContainer]}
-              onPress={() => navigation.navigate("AllergenCheck")}
-            >
-              <Image
-                source={require("../assets/images/health_icon.png")}
-                style={styles.optionIcon}
-              />
-              <Text style={styles.leftText}>Allergen</Text>
-            </TouchableOpacity>
-  
-            <TouchableOpacity
-              style={[styles.squareContainer, styles.rightContainer]}
-              onPress={() => navigation.navigate("BoycottCheck")}
-            >
-              <Image
-                source={require("../assets/images/boycott_icon.png")}
-                style={styles.optionIcon}
-              />
-              <Text style={styles.rightText}>Boycott</Text>
-            </TouchableOpacity>
-          </View>
-  
-          <View style={styles.footer}>
+
+          <TouchableOpacity
+            style={[styles.squareContainer, styles.rightContainer]}
+            onPress={() => navigation.navigate("BoycottCheck")}
+          >
+            <Image
+              source={require("../assets/images/boycott_icon.png")}
+              style={styles.optionIcon}
+            />
+            <Text style={styles.rightText}>Boycott</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.footer}>
           <TouchableOpacity
             style={styles.iconContainer}
             onPress={() => navigation.navigate("Home")}
